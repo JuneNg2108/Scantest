@@ -82,11 +82,10 @@ function startScanner() {
 function getProductInfo(barcode) {
     const product = productData.find(product => product.Code === barcode);
     if (product) {
-        // Ensure you're using "Price" as per your JSON structure
         return {
             title: product.Name,
-            description: 'Available', // Placeholder text
-            price: `${product.Price} VND`, // Use the correct property name
+            description: 'Available',
+            price: `${product.Price} VND`,
             image: 'path/to/default_product_image.jpg'
         };
     }
@@ -95,7 +94,6 @@ function getProductInfo(barcode) {
 
 
 function showPopup(productInfo) {
-    // Modify to display just title, description, and Price based on customer type
     const popup = document.getElementById('product-info');
     const titleElement = document.getElementById('product-title');
     const imageElement = document.getElementById('product-image');
@@ -111,11 +109,10 @@ function showPopup(productInfo) {
 }
 
 function closePopup() {
-    // Close the popup and optionally restart the scanner
     const popup = document.getElementById('product-info');
     popup.style.display = 'none';
-    startScanner();
 }
+
 
 // Setup the search functionality
 function setupSearch() {
@@ -128,21 +125,20 @@ function setupSearch() {
             product.Name.toLowerCase().includes(value) || product.Code.includes(value)
         );
 
-        searchResults.innerHTML = ''; // Clear previous results
+        searchResults.innerHTML = '';
         filteredProducts.forEach(product => {
             const div = document.createElement('div');
             div.textContent = `${product.Name} (${product.Code})`;
             div.addEventListener('click', () => {
-                searchInput.value = ''; // Optionally clear search input
-                searchResults.style.display = 'none'; // Hide results
-                showPopup(getProductInfo(product.Code)); // Show popup for clicked product
+                searchInput.value = '';
+                searchResults.style.display = 'none';
+                showPopup(getProductInfo(product.Code));
             });
             searchResults.appendChild(div);
         });
         searchResults.style.display = filteredProducts.length > 0 ? 'block' : 'none';
     });
 }
-
 // Adjust scanner container height for smaller screens
 window.addEventListener('resize', function() {
     const scannerContainer = document.getElementById('scanner-container');
