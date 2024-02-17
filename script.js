@@ -10,6 +10,7 @@ let productData = {
     title: "dầu gội tresemme mỹ 828ml",
     price: "125000 VND",
     image: "path_to_image_of_22400393667.jpg"
+  },
   // Add the rest of the products in a similar fashion
   // Note: You should add the actual image paths and additional product details if available
 };
