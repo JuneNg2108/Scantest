@@ -136,3 +136,8 @@ const scanBtn = document.getElementById('scanBtn');
 scanBtn.addEventListener('click', function() {
     startScanner();
 });
+
+
+
+
+
