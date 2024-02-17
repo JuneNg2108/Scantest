@@ -9,7 +9,7 @@ function showCustomerTypeModal() {
   modal.style.display = "block";
 
   document.getElementById('retailCustomerBtn').addEventListener('click', function() {
-    loadProductData('GiaLe.json'); // Assuming you have GiaLe.json for retail customers
+    loadProductData('BanLe.json'); // Assuming you have GiaLe.json for retail customers
     modal.style.display = "none";
   });
 
