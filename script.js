@@ -1,4 +1,5 @@
 let productData = [];
+let customerType = '';
 
 document.addEventListener('DOMContentLoaded', () => {
     showCustomerTypeModal();
@@ -35,8 +36,8 @@ async function loadProductData(jsonFile) {
     try {
         const response = await fetch(jsonFile);
         productData = await response.json();
-        // Assuming you might want to restart or start the scanner based on new data
-        startScanner();
+        startScanner(); // Call startScanner here ensures scanner starts after data is loaded
+        setupSearch(); // Moved setupSearch here to ensure it's called after data is loaded
     } catch (error) {
         console.error(`Failed to load product data from ${jsonFile}:`, error);
     }
@@ -77,16 +78,19 @@ function startScanner() {
 function getProductInfo(barcode) {
     const product = productData.find(product => product.Code.toString() === barcode);
     if (product) {
+        // Determine price based on customer type
+        let priceLabel = customerType === 'wholesale' ? 'Giá Buôn' : 'Giá Lẻ';
+        let priceValue = customerType === 'wholesale' ? product.GiaBuon : product.GiaLe;
+        
         return {
             title: product.Name,
             description: product.Description || 'No description available.',
-            price: product.Price || 'Price unavailable', // Assume there's a Price field in JSON
-            image: product.Image || 'path/to/default_product_image.jpg'
+            price: `${priceLabel}: ${priceValue} VND`, // Adjusted to show appropriate price
+            image: product.Image || 'path/to/default_product_image.jpg' // Ensure this path is correct
         };
     }
     return null;
 }
-
 function showPopup(productInfo) {
     // Modify to display just title, description, and Price based on customer type
     const popup = document.getElementById('product-info');
