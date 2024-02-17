@@ -82,15 +82,17 @@ function startScanner() {
 function getProductInfo(barcode) {
     const product = productData.find(product => product.Code === barcode);
     if (product) {
+        // Ensure you're using "Price" as per your JSON structure
         return {
             title: product.Name,
-            description: 'Available', // Since Description is not provided
-            price: `${product.Gia} VND`, // Use Gia for price
-            image: 'path/to/default_product_image.jpg' // Placeholder image path
+            description: 'Available', // Placeholder text
+            price: `${product.Price} VND`, // Use the correct property name
+            image: 'path/to/default_product_image.jpg'
         };
     }
     return null;
 }
+
 
 function showPopup(productInfo) {
     // Modify to display just title, description, and Price based on customer type
