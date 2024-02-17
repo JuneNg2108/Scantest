@@ -10,10 +10,8 @@ async function loadProductData() {
   }
 }
 
-// Execute loadProductData on page load
-document.addEventListener('DOMContentLoaded', loadProductData);
-
-async function scanBarcode() {
+// Refactor the Quagga.init logic into a reusable function for starting the scanner
+function startScanner() {
   Quagga.init({
     inputStream: {
       name: "Live",
@@ -43,15 +41,20 @@ async function scanBarcode() {
   });
 }
 
+// This function is now simplified to just call startScanner
+async function scanBarcode() {
+  startScanner();
+}
+
 function getProductInfo(barcode) {
   // Search for product information by barcode in the loaded JSON data
   const product = productData.find(product => product.Code.toString() === barcode);
   if (product) {
     return {
       title: product.Name,
+      description: product.Description || 'No description available.',
       wholesalePrice: `${product.WholeSale} VND`,
       retailPrice: `${product.Retail} VND`,
-      description: product.Description || 'No description available.',
       image: 'path/to/default_product_image.jpg' // Update this path as necessary
     };
   }
@@ -68,7 +71,6 @@ function showPopup(productInfo) {
   titleElement.textContent = productInfo.title;
   imageElement.src = productInfo.image; // Ensure you have a default or specific product image path
   descriptionElement.textContent = productInfo.description;
-  // Updated to show both wholesale and retail prices separately
   priceElement.innerHTML = `Wholesale Price: ${productInfo.wholesalePrice}<br>Retail Price: ${productInfo.retailPrice}`;
 
   popup.style.display = 'block';
@@ -77,6 +79,8 @@ function showPopup(productInfo) {
 function closePopup() {
   const popup = document.getElementById('product-info');
   popup.style.display = 'none';
+  // Automatically restart the barcode scanner after closing the popup
+  startScanner();
 }
 
 // Adjust scanner container height for smaller screens
@@ -86,8 +90,14 @@ window.addEventListener('resize', function() {
   scannerContainer.style.height = `${windowHeight * 0.5}px`; // Adjust as needed
 });
 
-// Scan barcode on button click
+// Execute loadProductData on page load and start the scanner automatically once the product data is loaded
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadProductData();
+  startScanner(); // Start scanning immediately after loading the page
+});
+
+// Optionally, adjust or remove the button's event listener based on your design decision
 const scanBtn = document.getElementById('scanBtn');
 scanBtn.addEventListener('click', function() {
-  scanBarcode();
+  startScanner(); // Optionally restart the scanner manually
 });
