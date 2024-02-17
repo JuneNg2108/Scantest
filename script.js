@@ -1,14 +1,34 @@
-let productData = []; // Initialize an empty array to hold product data
+let productData = [];
 
-// Function to load product data from JSON
-async function loadProductData() {
-    try {
-        const response = await fetch('product_data.json'); // Specify the correct path to your JSON file
-        productData = await response.json();
-    } catch (error) {
-        console.error('Failed to load product data:', error);
-    }
+document.addEventListener('DOMContentLoaded', () => {
+  showCustomerTypeModal();
+});
+
+function showCustomerTypeModal() {
+  const modal = document.getElementById('customerTypeModal');
+  modal.style.display = "block";
+
+  document.getElementById('retailCustomerBtn').addEventListener('click', function() {
+    loadProductData('GiaLe.json'); // Assuming you have GiaLe.json for retail customers
+    modal.style.display = "none";
+  });
+
+  document.getElementById('wholesaleCustomerBtn').addEventListener('click', function() {
+    loadProductData('BanBuon.json'); // Assuming you have BanBuon.json for wholesale customers
+    modal.style.display = "none";
+  });
 }
+
+async function loadProductData(jsonFile) {
+  try {
+    const response = await fetch(jsonFile); // Load the corresponding JSON file
+    productData = await response.json();
+    startScanner(); // Start the scanner after loading product data
+  } catch (error) {
+    console.error(`Failed to load product data from ${jsonFile}:`, error);
+  }
+}
+
 
 // Refactor the Quagga.init logic into a reusable function for starting the scanner
 function startScanner() {
@@ -47,9 +67,8 @@ function getProductInfo(barcode) {
     if (product) {
         return {
             title: product.Name,
-            description: product.Description || 'No description available.',
-            wholesalePrice: `${product.WholeSale} VND`,
-            retailPrice: `${product.Retail} VND`,
+            MieuTa: product.Description || 'No description available.',
+            Gia: `${product.WholeSale} VND`,
             image: 'path/to/default_product_image.jpg' // Update this path as necessary
         };
     }
