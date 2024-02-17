@@ -76,21 +76,18 @@ function startScanner() {
 }
 
 function getProductInfo(barcode) {
-    const product = productData.find(product => product.Code.toString() === barcode);
+    const product = productData.find(product => product.Code === barcode);
     if (product) {
-        // Determine price based on customer type
-        let priceLabel = customerType === 'wholesale' ? 'Giá Buôn' : 'Giá Lẻ';
-        let priceValue = customerType === 'wholesale' ? product.GiaBuon : product.GiaLe;
-        
         return {
             title: product.Name,
-            description: product.Description || 'No description available.',
-            price: `${priceLabel}: ${priceValue} VND`, // Adjusted to show appropriate price
-            image: product.Image || 'path/to/default_product_image.jpg' // Ensure this path is correct
+            description: 'Available', // Since Description is not provided
+            price: `${product.Gia} VND`, // Use Gia for price
+            image: 'path/to/default_product_image.jpg' // Placeholder image path
         };
     }
     return null;
 }
+
 function showPopup(productInfo) {
     // Modify to display just title, description, and Price based on customer type
     const popup = document.getElementById('product-info');
@@ -122,7 +119,7 @@ function setupSearch() {
     searchInput.addEventListener('input', function() {
         const value = searchInput.value.toLowerCase();
         const filteredProducts = productData.filter(product =>
-            product.Name.toLowerCase().includes(value) || product.Code.toString().includes(value)
+            product.Name.toLowerCase().includes(value) || product.Code.includes(value)
         );
 
         searchResults.innerHTML = ''; // Clear previous results
@@ -130,9 +127,9 @@ function setupSearch() {
             const div = document.createElement('div');
             div.textContent = `${product.Name} (${product.Code})`;
             div.addEventListener('click', () => {
-                searchInput.value = ''; // Clear search input
+                searchInput.value = ''; // Optionally clear search input
                 searchResults.style.display = 'none'; // Hide results
-                showPopup(getProductInfo(product.Code.toString())); // Show popup for clicked product
+                showPopup(getProductInfo(product.Code)); // Show popup for clicked product
             });
             searchResults.appendChild(div);
         });
