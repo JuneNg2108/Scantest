@@ -1,15 +1,15 @@
 // Initialize an empty object for product data
 let productData = {
-  "2240039379": {
+let productData = {
+  "22400393650": {
     title: "dầu gội tresemme mỹ 828ml",
     price: "125000 VND",
-    image: "path_to_image.jpg" // Placeholder for image path
+    image: "path_to_image_of_22400393650.jpg"
   },
-  "2240039368": {
+  "22400393667": {
     title: "dầu gội tresemme mỹ 828ml",
     price: "125000 VND",
-    image: "path_to_image.jpg" // Placeholder for image path
-  },
+    image: "path_to_image_of_22400393667.jpg"
   // Add the rest of the products in a similar fashion
   // Note: You should add the actual image paths and additional product details if available
 };
