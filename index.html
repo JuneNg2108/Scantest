@@ -7,15 +7,22 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Barcode Scanner</h1>
-  <button onclick="scanBarcode()">Scan Barcode</button>
-  <div id="scanner-container"></div>
-  <div id="product-info" style="display: none;">
-    <h2>Product Information</h2>
-    <p id="description"></p>
-    <p id="price"></p>
-  </div>
-
+  <header>
+    <h1>Barcode Scanner</h1>
+  </header>
+  <main>
+    <button id="scanBtn">Scan Barcode</button>
+    <div id="scanner-container"></div>
+    <div id="product-info" class="popup" style="display: none;">
+      <div class="popup-content">
+        <span class="close" onclick="closePopup()">&times;</span>
+        <h2 id="product-title"></h2>
+        <img id="product-image" src="" alt="Product Image">
+        <p id="product-description"></p>
+        <p id="product-price"></p>
+      </div>
+    </div>
+  </main>
   <script src="https://cdn.jsdelivr.net/npm/quagga"></script>
   <script src="script.js"></script>
 </body>
