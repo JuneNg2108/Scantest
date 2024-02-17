@@ -73,6 +73,47 @@ button:hover {
   cursor: pointer;
 }
 
+.search-container {
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+  margin: 20px auto;
+}
+
+#searchInput {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  background-color: #fff;
+  overflow: hidden;
+  display: none; /* Initially hidden */
+}
+
+.search-results div {
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.search-results div:hover {
+  background-color: #f0f0f0;
+}
+
+
 @media screen and (max-width: 768px) {
   #scanner-container {
     max-width: 90%;
