@@ -1,32 +1,45 @@
 let productData = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-  showCustomerTypeModal();
+    showCustomerTypeModal();
+    setupSearch(); // Setup search functionality
 });
 
 function showCustomerTypeModal() {
-  const modal = document.getElementById('customerTypeModal');
-  modal.style.display = "block";
+    // Create and show the modal for customer type selection
+    let modalHTML = `
+        <div id="customerTypeModal" class="modal">
+            <div class="modal-content">
+                <h2>Bạn là khách hàng nào?</h2>
+                <button id="retailCustomerBtn">Khách Lẻ</button>
+                <button id="wholesaleCustomerBtn">Khách Buôn</button>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    const modal = document.getElementById('customerTypeModal');
+    modal.style.display = "block";
 
-  document.getElementById('retailCustomerBtn').addEventListener('click', function() {
-    loadProductData('BanLe.json'); // Assuming you have GiaLe.json for retail customers
-    modal.style.display = "none";
-  });
+    document.getElementById('retailCustomerBtn').addEventListener('click', function() {
+        loadProductData('BanLe.json');
+        modal.style.display = "none";
+    });
 
-  document.getElementById('wholesaleCustomerBtn').addEventListener('click', function() {
-    loadProductData('BanBuon.json'); // Assuming you have BanBuon.json for wholesale customers
-    modal.style.display = "none";
-  });
+    document.getElementById('wholesaleCustomerBtn').addEventListener('click', function() {
+        loadProductData('BanBuon.json');
+        modal.style.display = "none";
+    });
 }
 
 async function loadProductData(jsonFile) {
-  try {
-    const response = await fetch(jsonFile); // Load the corresponding JSON file
-    productData = await response.json();
-    startScanner(); // Start the scanner after loading product data
-  } catch (error) {
-    console.error(`Failed to load product data from ${jsonFile}:`, error);
-  }
+    try {
+        const response = await fetch(jsonFile);
+        productData = await response.json();
+        // Assuming you might want to restart or start the scanner based on new data
+        startScanner();
+    } catch (error) {
+        console.error(`Failed to load product data from ${jsonFile}:`, error);
+    }
 }
 
 
@@ -62,20 +75,20 @@ function startScanner() {
 }
 
 function getProductInfo(barcode) {
-    // Search for product information by barcode in the loaded JSON data
     const product = productData.find(product => product.Code.toString() === barcode);
     if (product) {
         return {
             title: product.Name,
-            MieuTa: product.Description || 'No description available.',
-            Gia: `${product.WholeSale} VND`,
-            image: 'path/to/default_product_image.jpg' // Update this path as necessary
+            description: product.Description || 'No description available.',
+            price: product.Price || 'Price unavailable', // Assume there's a Price field in JSON
+            image: product.Image || 'path/to/default_product_image.jpg'
         };
     }
     return null;
 }
 
 function showPopup(productInfo) {
+    // Modify to display just title, description, and Price based on customer type
     const popup = document.getElementById('product-info');
     const titleElement = document.getElementById('product-title');
     const imageElement = document.getElementById('product-image');
@@ -83,17 +96,17 @@ function showPopup(productInfo) {
     const priceElement = document.getElementById('product-price');
 
     titleElement.textContent = productInfo.title;
-    imageElement.src = productInfo.image; // Ensure you have a default or specific product image path
+    imageElement.src = productInfo.image;
     descriptionElement.textContent = productInfo.description;
-    priceElement.innerHTML = `Wholesale Price: ${productInfo.wholesalePrice}<br>Retail Price: ${productInfo.retailPrice}`;
+    priceElement.textContent = `Price: ${productInfo.price}`;
 
     popup.style.display = 'block';
 }
 
 function closePopup() {
+    // Close the popup and optionally restart the scanner
     const popup = document.getElementById('product-info');
     popup.style.display = 'none';
-    // Automatically restart the barcode scanner after closing the popup
     startScanner();
 }
 
