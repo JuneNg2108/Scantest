@@ -35,13 +35,17 @@ function showCustomerTypeModal() {
 async function loadProductData(jsonFile) {
     try {
         const response = await fetch(jsonFile);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         productData = await response.json();
-        startScanner(); // Call startScanner here ensures scanner starts after data is loaded
-        setupSearch(); // Moved setupSearch here to ensure it's called after data is loaded
+        console.log("Product data loaded successfully");
+        // Initialize the scanner or other components that depend on product data here
     } catch (error) {
         console.error(`Failed to load product data from ${jsonFile}:`, error);
     }
 }
+
 
 
 // Refactor the Quagga.init logic into a reusable function for starting the scanner
