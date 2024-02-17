@@ -1,3 +1,19 @@
+// Initialize an empty object for product data
+let productData = {
+  "22400393650": {
+    title: "dầu gội tresemme mỹ 828ml",
+    price: "125000 VND",
+    image: "path_to_image.jpg" // Placeholder for image path
+  },
+  "22400393667": {
+    title: "dầu gội tresemme mỹ 828ml",
+    price: "125000 VND",
+    image: "path_to_image.jpg" // Placeholder for image path
+  },
+  // Add the rest of the products in a similar fashion
+  // Note: You should add the actual image paths and additional product details if available
+};
+
 async function scanBarcode() {
   Quagga.init({
     inputStream: {
@@ -19,7 +35,6 @@ async function scanBarcode() {
   Quagga.onDetected(function (data) {
     Quagga.stop();
     const barcode = data.codeResult.code;
-
     const productInfo = getProductInfo(barcode);
     if (productInfo) {
       showPopup(productInfo);
@@ -30,23 +45,8 @@ async function scanBarcode() {
 }
 
 function getProductInfo(barcode) {
-  // Example product data
-  const products = {
-    "8710428998392": {
-      title: "Milk for Slim",
-      description: "Delicious milk for those who want to stay slim and healthy.",
-      price: "$100",
-      image: "milk.jpg"
-    },
-    "8850952925102": {
-      title: "Candy Cup",
-      description: "Sweet and delightful candy cup for your enjoyment.",
-      price: "$50",
-      image: "candy_cup.jpg"
-    }
-  };
-
-  return products[barcode];
+  // Retrieve product information by barcode
+  return productData[barcode];
 }
 
 function showPopup(productInfo) {
@@ -58,7 +58,7 @@ function showPopup(productInfo) {
 
   titleElement.textContent = productInfo.title;
   imageElement.src = productInfo.image;
-  descriptionElement.textContent = productInfo.description;
+  descriptionElement.textContent = productInfo.description || 'No description available.';
   priceElement.textContent = `Price: ${productInfo.price}`;
 
   popup.style.display = 'block';
