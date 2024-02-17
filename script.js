@@ -1,19 +1,17 @@
-// Initialize an empty object for product data
-let productData = {
-let productData = {
-  "22400393650": {
-    title: "dầu gội tresemme mỹ 828ml",
-    price: "125000 VND",
-    image: "path_to_image_of_22400393650.jpg"
-  },
-  "22400393667": {
-    title: "dầu gội tresemme mỹ 828ml",
-    price: "125000 VND",
-    image: "path_to_image_of_22400393667.jpg"
-  },
-  // Add the rest of the products in a similar fashion
-  // Note: You should add the actual image paths and additional product details if available
-};
+let productData = []; // Initialize an empty array to hold product data
+
+// Function to load product data from JSON
+async function loadProductData() {
+  try {
+    const response = await fetch('product_data.json'); // Specify the correct path to your JSON file
+    productData = await response.json();
+  } catch (error) {
+    console.error('Failed to load product data:', error);
+  }
+}
+
+// Execute loadProductData on page load
+document.addEventListener('DOMContentLoaded', loadProductData);
 
 async function scanBarcode() {
   Quagga.init({
@@ -46,8 +44,18 @@ async function scanBarcode() {
 }
 
 function getProductInfo(barcode) {
-  // Retrieve product information by barcode
-  return productData[barcode];
+  // Search for product information by barcode in the loaded JSON data
+  const product = productData.find(product => product.Code.toString() === barcode);
+  if (product) {
+    return {
+      title: product.Name,
+      wholesalePrice: `${product.WholeSale} VND`,
+      retailPrice: `${product.Retail} VND`,
+      description: product.Description || 'No description available.',
+      image: 'path/to/default_product_image.jpg' // Update this path as necessary
+    };
+  }
+  return null;
 }
 
 function showPopup(productInfo) {
@@ -58,9 +66,10 @@ function showPopup(productInfo) {
   const priceElement = document.getElementById('product-price');
 
   titleElement.textContent = productInfo.title;
-  imageElement.src = productInfo.image;
-  descriptionElement.textContent = productInfo.description || 'No description available.';
-  priceElement.textContent = `Price: ${productInfo.price}`;
+  imageElement.src = productInfo.image; // Ensure you have a default or specific product image path
+  descriptionElement.textContent = productInfo.description;
+  // Updated to show both wholesale and retail prices separately
+  priceElement.innerHTML = `Wholesale Price: ${productInfo.wholesalePrice}<br>Retail Price: ${productInfo.retailPrice}`;
 
   popup.style.display = 'block';
 }
