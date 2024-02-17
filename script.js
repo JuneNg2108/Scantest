@@ -34,13 +34,13 @@ function getProductInfo(barcode) {
   const products = {
     "8710428998392": {
       title: "Milk for Slim",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      description: "Delicious milk for those who want to stay slim and healthy.",
       price: "$100",
       image: "milk.jpg"
     },
     "8850952925102": {
       title: "Candy Cup",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      description: "Sweet and delightful candy cup for your enjoyment.",
       price: "$50",
       image: "candy_cup.jpg"
     }
