@@ -1,13 +1,11 @@
 let productData = [];
-let customerType = '';
+let customerType = ''; // 'retail' for BanLe.json, 'wholesale' for BanBuon.json
 
 document.addEventListener('DOMContentLoaded', () => {
     showCustomerTypeModal();
-    setupSearch(); // Setup search functionality
 });
 
 function showCustomerTypeModal() {
-    // Create and show the modal for customer type selection
     let modalHTML = `
         <div id="customerTypeModal" class="modal">
             <div class="modal-content">
@@ -22,11 +20,13 @@ function showCustomerTypeModal() {
     modal.style.display = "block";
 
     document.getElementById('retailCustomerBtn').addEventListener('click', function() {
+        customerType = 'retail';
         loadProductData('BanLe.json');
         modal.style.display = "none";
     });
 
     document.getElementById('wholesaleCustomerBtn').addEventListener('click', function() {
+        customerType = 'wholesale';
         loadProductData('BanBuon.json');
         modal.style.display = "none";
     });
@@ -35,20 +35,15 @@ function showCustomerTypeModal() {
 async function loadProductData(jsonFile) {
     try {
         const response = await fetch(jsonFile);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
         productData = await response.json();
-        console.log("Product data loaded successfully");
-        // Initialize the scanner or other components that depend on product data here
+        // No need to call startScanner here if you want the user to initiate scanning manually
     } catch (error) {
         console.error(`Failed to load product data from ${jsonFile}:`, error);
     }
+    // Call setupSearch after the product data is loaded to ensure it works with the loaded data
+    setupSearch();
 }
 
-
-
-// Refactor the Quagga.init logic into a reusable function for starting the scanner
 function startScanner() {
     Quagga.init({
         inputStream: {
@@ -70,12 +65,7 @@ function startScanner() {
     Quagga.onDetected(function(data) {
         Quagga.stop();
         const barcode = data.codeResult.code;
-        const productInfo = getProductInfo(barcode);
-        if (productInfo) {
-            showPopup(productInfo);
-        } else {
-            alert("No product found!");
-        }
+        showPopup(getProductInfo(barcode));
     });
 }
 
@@ -84,25 +74,25 @@ function getProductInfo(barcode) {
     if (product) {
         return {
             title: product.Name,
-            description: 'Available',
-            price: `${product.Price} VND`,
-            image: 'path/to/default_product_image.jpg'
+            price: `${product.Price} VND`, // Directly using 'Price' from the loaded data
+            image: 'path/to/default_product_image.jpg' // Placeholder image path
         };
     }
     return null;
 }
 
-
 function showPopup(productInfo) {
+    if (!productInfo) {
+        alert("No product found!");
+        return;
+    }
     const popup = document.getElementById('product-info');
     const titleElement = document.getElementById('product-title');
     const imageElement = document.getElementById('product-image');
-    const descriptionElement = document.getElementById('product-description');
     const priceElement = document.getElementById('product-price');
 
     titleElement.textContent = productInfo.title;
     imageElement.src = productInfo.image;
-    descriptionElement.textContent = productInfo.description;
     priceElement.textContent = `Price: ${productInfo.price}`;
 
     popup.style.display = 'block';
@@ -113,47 +103,36 @@ function closePopup() {
     popup.style.display = 'none';
 }
 
-
-// Setup the search functionality
 function setupSearch() {
     const searchInput = document.getElementById('searchInput');
     const searchResults = document.getElementById('searchResults');
 
     searchInput.addEventListener('input', function() {
         const value = searchInput.value.toLowerCase();
-        const filteredProducts = productData.filter(product =>
-            product.Name.toLowerCase().includes(value) || product.Code.includes(value)
-        );
-
         searchResults.innerHTML = '';
+        const filteredProducts = productData.filter(product => product.Name.toLowerCase().includes(value) || product.Code.includes(value));
         filteredProducts.forEach(product => {
             const div = document.createElement('div');
             div.textContent = `${product.Name} (${product.Code})`;
             div.addEventListener('click', () => {
                 searchInput.value = '';
                 searchResults.style.display = 'none';
-                showPopup(getProductInfo(product.Code));
+                showPopup(product);
             });
             searchResults.appendChild(div);
         });
         searchResults.style.display = filteredProducts.length > 0 ? 'block' : 'none';
     });
 }
+
 // Adjust scanner container height for smaller screens
 window.addEventListener('resize', function() {
     const scannerContainer = document.getElementById('scanner-container');
     const windowHeight = window.innerHeight;
-    scannerContainer.style.height = `${windowHeight * 0.5}px`; // Adjust as needed
+    scannerContainer.style.height = `${windowHeight * 0.5}px`;
 });
 
-// Execute loadProductData on page load, start the scanner and setup search functionality
-document.addEventListener('DOMContentLoaded', async () => {
-    await loadProductData();
-    setupSearch(); // Setup search functionality after loading product data
-});
-
-// Adjust or remove the button's event listener based on your design decision
 const scanBtn = document.getElementById('scanBtn');
 scanBtn.addEventListener('click', function() {
-    startScanner(); // Optionally restart the scanner manually
+    startScanner();
 });
