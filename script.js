@@ -1,11 +1,11 @@
 // Initialize an empty object for product data
 let productData = {
-  "22400393650": {
+  "2240039379": {
     title: "dầu gội tresemme mỹ 828ml",
     price: "125000 VND",
     image: "path_to_image.jpg" // Placeholder for image path
   },
-  "22400393667": {
+  "2240039368": {
     title: "dầu gội tresemme mỹ 828ml",
     price: "125000 VND",
     image: "path_to_image.jpg" // Placeholder for image path
