@@ -26,7 +26,7 @@ button {
 
 #scanner-container {
   width: 100%;
-  max-width: 500px;
+  max-width: 300px;
   height: auto;
   position: relative;
 }
@@ -39,7 +39,8 @@ button {
   background-color: #f9f9f9;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  max-width: 80%;
+  width: 80%;
+  max-width: 300px;
   z-index: 999;
   display: none;
 }
@@ -56,8 +57,20 @@ button {
   cursor: pointer;
 }
 
+/* Responsive Styles */
 @media screen and (max-width: 600px) {
   main {
     padding: 10px;
+  }
+  
+  button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+  
+  .popup {
+    width: 90%;
+    padding: 16px;
+    max-width: 280px;
   }
 }
